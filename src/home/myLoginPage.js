@@ -15,7 +15,7 @@ function Copyright() {
         <Typography variant="body2" color="textSecondary" align="center">
             {'Copyright © '}
             <Link color="inherit" href="#">
-                Apartments Scraper
+                Technical Analysis Bot
         </Link>{' '}
             {new Date().getFullYear()}
             {'.'}
