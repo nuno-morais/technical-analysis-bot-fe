@@ -5,8 +5,8 @@ export const PortfolioList = props => {
     return (
         <List {...props}>
             <Datagrid >
-                <TextField source="market" />
-                <TextField source="product" />
+                <TextField label="Market" source="market" />
+                <TextField label="Product" source="product" />
             </Datagrid>
         </List>
     );
@@ -15,9 +15,9 @@ export const PortfolioList = props => {
 export const PortfolioCreate = (props) => (
     <Create {...props}>
         <SimpleForm>
-            <TextInput source="market" defaultValue={'US'} />
-            <TextInput source="product" />
-            <TextInput hidden={true} source="currency" defaultValue={'USD'} />
+            <TextInput label="Market" source="market" defaultValue={'US'} />
+            <TextInput label="Product" source="product" />
+            <TextInput label="Currency" hidden={true} source="currency" defaultValue={'USD'} />
         </SimpleForm>
     </Create>
 );

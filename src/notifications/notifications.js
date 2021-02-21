@@ -6,8 +6,8 @@ export const NotificationList = props => {
     return (
         <List {...props}>
             <Datagrid >
-                <TextField source="provider.name" />
-                <TextField source="enabled" />
+                <TextField label="Provider Name" source="provider.name" />
+                <TextField label="Is Enabled" source="enabled" />
             </Datagrid>
         </List>
     );
@@ -16,10 +16,10 @@ export const NotificationList = props => {
 export const NotificationCreate = (props) => (
     <Create {...props}>
         <SimpleForm>
-            <TextInput source="provider.name" />
-            <TextInput source="provider.webhook_url" />
-            <TextInput source="provider.token" />
-            <TextInput source="provider.chat_id" />
+            <TextInput label="Provider Name" source="provider.name" />
+            <TextInput label="Provider Webhook (SLACK)" source="provider.webhook_url" />
+            <TextInput label="Provider Token (TELEGRAM)" source="provider.token" />
+            <TextInput label="Provider Chat Id (TELEGRAM)" source="provider.chat_id" />
             <BooleanInput
                 source="enabled"
                 options={{
