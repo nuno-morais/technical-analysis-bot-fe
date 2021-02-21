@@ -1,25 +1,17 @@
-import logo from './logo.svg';
-import './App.css';
+import React from 'react';
+import { Admin, Resource } from 'react-admin';
+import authProvider from './auth/authProvider';
+import dataProvider from './dataProvider';
+import MyLoginPage from './home/myLoginPage';
+import { NotificationCreate, NotificationList } from './notifications/notifications';
+import { PortfolioCreate, PortfolioList } from './portfolios/portfolios';
 
-function App() {
+const App = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
-
+    <Admin loginPage={MyLoginPage} authProvider={authProvider} dataProvider={dataProvider}>
+      <Resource name="notifications" list={NotificationList} create={NotificationCreate} />
+      <Resource name="portfolios" list={PortfolioList} create={PortfolioCreate} />
+    </Admin>
+  )
+};
 export default App;
