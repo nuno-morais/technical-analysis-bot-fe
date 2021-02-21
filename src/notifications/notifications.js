@@ -7,9 +7,6 @@ export const NotificationList = props => {
         <List {...props}>
             <Datagrid >
                 <TextField source="provider.name" />
-                <TextField source="provider.webhook_url" />
-                <TextField source="provider.token" />
-                <TextField source="provider.chat_id" />
                 <TextField source="enabled" />
             </Datagrid>
         </List>
