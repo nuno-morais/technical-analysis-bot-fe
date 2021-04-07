@@ -5,7 +5,7 @@ const clientAuth0 = createAuth0Client({
     client_id: process.env.REACT_APP_AUTH0_CLIENT_ID,
     issuer: process.env.REACT_APP_AUTH0_ISSUER,
     audience: process.env.REACT_APP_AUTH0_AUDIENCE,
-    scope: 'write:notifications read:notifications write:portfolios read:portfolios'
+    scope: 'write:notifications read:notifications write:portfolios read:portfolios write:trades read:trades'
 });
 
 const getUser = async () => {
