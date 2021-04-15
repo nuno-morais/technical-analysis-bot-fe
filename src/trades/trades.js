@@ -1,5 +1,5 @@
 import React from 'react';
-import { Create, Datagrid, DateField, DateInput, List, NumberField, NumberInput, SimpleForm, TextField, TextInput } from 'react-admin';
+import { Create, Datagrid, DateField, DateInput, Edit, List, NumberField, NumberInput, Show, SimpleForm, SimpleShowLayout, TextField, TextInput } from 'react-admin';
 
 export const Info = ({record: {shares, opened_price, closed_price}}) => {
     if (closed_price != null) {
@@ -41,4 +41,34 @@ export const TradeCreate = (props) => (
             <NumberInput label="Price" source="closed_price"  required={false}/>
         </SimpleForm>
     </Create>
+);
+
+export const TradeEdit = (props) => (
+    <Edit {...props}>
+        <SimpleForm>
+            <TextInput label="Currency" hidden={true} source="currency" defaultValue={'USD'} />
+            <TextInput label="Market" source="market" defaultValue={'US'} />
+            <TextInput label="Product" source="product" />
+            <NumberInput label="Shares" source="shares"/>
+            <DateInput label="Opened at:" source="opened_at"/>
+            <NumberInput label="Price" source="opened_price"/>
+            <DateInput label="Closed at:" source="closed_at" required={false}/>
+            <NumberInput label="Price" source="closed_price"  required={false}/>
+        </SimpleForm>
+    </Edit>
+);
+
+export const TradeShow = (props) => (
+    <Show {...props}>
+        <SimpleShowLayout>
+            <TextField label="Currency" hidden={true} source="currency" defaultValue={'USD'} />
+            <TextField label="Market" source="market" defaultValue={'US'} />
+            <TextField label="Product" source="product" />
+            <NumberField label="Shares" source="shares"/>
+            <DateField label="Opened at:" source="opened_at"/>
+            <NumberField label="Price" source="opened_price"/>
+            <DateField label="Closed at:" source="closed_at"/>
+            <NumberField label="Price" source="closed_price"/>
+        </SimpleShowLayout>
+    </Show>
 );

@@ -5,14 +5,16 @@ import dataProvider from './dataProvider';
 import MyLoginPage from './home/myLoginPage';
 import { NotificationCreate, NotificationList } from './notifications/notifications';
 import { PortfolioCreate, PortfolioList } from './portfolios/portfolios';
-import { TradeCreate, TradeList } from './trades/trades';
+import { TradesSummaryList } from './trades-summary/trades-summary';
+import { TradeCreate, TradeEdit, TradeList, TradeShow } from './trades/trades';
 
 const App = () => {
   return (
     <Admin loginPage={MyLoginPage} authProvider={authProvider} dataProvider={dataProvider}>
       <Resource name="notifications" list={NotificationList} create={NotificationCreate} />
       <Resource name="portfolios" list={PortfolioList} create={PortfolioCreate} />
-      <Resource name="trades" list={TradeList} create={TradeCreate} />
+      <Resource name="trades" list={TradeList} create={TradeCreate} edit={TradeEdit} show={TradeShow}/>
+      <Resource name="trades-summary" list={TradesSummaryList}/>
     </Admin>
   )
 };
