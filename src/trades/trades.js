@@ -12,7 +12,7 @@ export const Info = ({record: {shares, opened_price, closed_price}}) => {
 export const TradeList = props => {
     return (
         <List {...props}>
-            <Datagrid >
+            <Datagrid  rowClick="show" > 
                 <TextField label="Market" source="market" />
                 <TextField label="Product" source="product" />
                 <TextField label="Currency" source="currency" />
@@ -39,6 +39,8 @@ export const TradeCreate = (props) => (
             <NumberInput label="Price" source="opened_price"/>
             <DateInput label="Closed at:" source="closed_at" required={false}/>
             <NumberInput label="Price" source="closed_price"  required={false}/>
+
+            <TextInput label="Provider" source="provider"  required={true}/>
         </SimpleForm>
     </Create>
 );
@@ -54,6 +56,8 @@ export const TradeEdit = (props) => (
             <NumberInput label="Price" source="opened_price"/>
             <DateInput label="Closed at:" source="closed_at" required={false}/>
             <NumberInput label="Price" source="closed_price"  required={false}/>
+
+            <TextInput label="Provider" source="provider"  required={true}/>
         </SimpleForm>
     </Edit>
 );
@@ -69,6 +73,8 @@ export const TradeShow = (props) => (
             <NumberField label="Price" source="opened_price"/>
             <DateField label="Closed at:" source="closed_at"/>
             <NumberField label="Price" source="closed_price"/>
+
+            <TextField label="Provider" source="provider"/>
         </SimpleShowLayout>
     </Show>
 );

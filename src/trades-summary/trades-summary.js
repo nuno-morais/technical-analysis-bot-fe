@@ -18,6 +18,7 @@ const TradesTable = ({ record, trades, classes, opened = false }) => {
     return (<Table className={classes.table} aria-label="simple table">
                 <TableHead>
                 <TableRow>
+                    <TableCell>Provider</TableCell>
                     <TableCell>Market</TableCell>
                     <TableCell>Product</TableCell>
                     <TableCell>Shares</TableCell>
@@ -29,7 +30,8 @@ const TradesTable = ({ record, trades, classes, opened = false }) => {
                 <TableBody>
                 {trades.map((row, index) => (
                     <TableRow key={`${index}-${row.opened_at}`}>
-                        <TableCell component="th" scope="row">{row.market}</TableCell>
+                        <TableCell component="th" scope="row">{row.provider}</TableCell>
+                        <TableCell>{row.market}</TableCell>
                         <TableCell>{row.product}</TableCell>
                         <TableCell>{parseFloat(row.shares).toFixed(2)}</TableCell>
                         <TableCell>{parseFloat(row.invested).toFixed(2)}</TableCell>
@@ -51,8 +53,8 @@ export const TradesSummaryInfo = ({ id, record, resource }) => {
         const trades = [];
         if (filter === 'market') {
             const tradesByMarket = record.trades.reduce((acc, value) => {
-                const key = `${value.market}`;
-                acc[key] = acc[key] || { total: 0, shares: 0, market: value.market, product: '', invested: 0 };
+                const key = `${value.market}#${value.provider || 'NA'}`;
+                acc[key] = acc[key] || { total: 0, shares: 0, market: value.market, product: '', invested: 0, provider: value.provider || 'NA' };
                 acc[key].total += ((value.closed_price || 0) - value.opened_price) * value.shares;
                 acc[key].shares += value.shares;
                 acc[key].invested += value.opened_price * value.shares;
@@ -64,12 +66,12 @@ export const TradesSummaryInfo = ({ id, record, resource }) => {
             }
         } else {
             const tradesByMarketProduct = record.trades.reduce((acc, value) => {
-                const key = `${value.market}#${value.product}`;
-                acc[key] = acc[key] || { total: 0, shares: 0, market: value.market, product: value.product, invested: 0 };
+                const key = `${value.market}#${value.product}#${value.provider || 'NA'}`;
+                acc[key] = acc[key] || { total: 0, shares: 0, market: value.market, product: value.product, invested: 0, provider: value.provider || 'NA' };
                 acc[key].total += ((value.closed_price || 0) - value.opened_price) * value.shares;
                 acc[key].shares += value.shares;
                 acc[key].invested += value.opened_price * value.shares;
-        
+
                 return acc;
             }, {});
             for (const trade in tradesByMarketProduct) {
