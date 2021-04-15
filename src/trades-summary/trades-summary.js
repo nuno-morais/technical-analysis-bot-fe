@@ -1,7 +1,8 @@
 import { Box, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@material-ui/core';
+import Button from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core/styles';
 import { Alert } from '@material-ui/lab';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Datagrid, FunctionField, List, NumberField } from 'react-admin';
 
 const useStyles = makeStyles({
@@ -42,29 +43,69 @@ const TradesTable = ({ record, trades, classes, opened = false }) => {
 }
 
 export const TradesSummaryInfo = ({ id, record, resource }) => {
+    const [trades, setTrades] = useState();
+    const [filter, setFilter] = useState('market');
     const classes = useStyles();
 
-    const tradesByMarketProduct = record.trades.reduce((acc, value) => {
-        const key = `${value.market}#${value.product}`;
-        acc[key] = acc[key] || { total: 0, shares: 0, market: value.market, product: value.product, invested: 0 };
-        acc[key].total += ((value.closed_price || 0) - value.opened_price) * value.shares;
-        acc[key].shares += value.shares;
-        acc[key].invested += value.opened_price * value.shares;
-
-        return acc;
-    }, {});
-
-    const trades = [];
-    for (const trade in tradesByMarketProduct) {
-        trades.push(tradesByMarketProduct[trade]);
-    }
-    trades.sort((a, b) => b.total - a.total)
+    useEffect(() => {
+        const trades = [];
+        if (filter === 'market') {
+            const tradesByMarket = record.trades.reduce((acc, value) => {
+                const key = `${value.market}`;
+                acc[key] = acc[key] || { total: 0, shares: 0, market: value.market, product: '', invested: 0 };
+                acc[key].total += ((value.closed_price || 0) - value.opened_price) * value.shares;
+                acc[key].shares += value.shares;
+                acc[key].invested += value.opened_price * value.shares;
+        
+                return acc;
+            }, {});
+            for (const trade in tradesByMarket) {
+                trades.push(tradesByMarket[trade]);
+            }
+        } else {
+            const tradesByMarketProduct = record.trades.reduce((acc, value) => {
+                const key = `${value.market}#${value.product}`;
+                acc[key] = acc[key] || { total: 0, shares: 0, market: value.market, product: value.product, invested: 0 };
+                acc[key].total += ((value.closed_price || 0) - value.opened_price) * value.shares;
+                acc[key].shares += value.shares;
+                acc[key].invested += value.opened_price * value.shares;
+        
+                return acc;
+            }, {});
+            for (const trade in tradesByMarketProduct) {
+                trades.push(tradesByMarketProduct[trade]);
+            }
+        }
+        trades.sort((a, b) => b.total - a.total)
+        setTrades(trades);
+    }, [filter, record]);
 
     return (
         <div style={{ width: '100%' }}>
             <Box display="flex" flexWrap="wrap" p={1}>
                 <Box p={1} className={classes.formbox}>
                     <Typography variant="h4" gutterBottom>Trades</Typography>
+                </Box>
+                <Box p={1} className={classes.formbox}>
+                    {filter === 'market' ? <Button
+                        type="button"
+                        fullWidth={false}
+                        variant="contained"
+                        color="primary"
+                        className={classes.submit}
+                        onClick={() => (setFilter('product'))}
+                    >
+                        By Product
+                    </Button> : <Button
+                        type="button"
+                        fullWidth={false}
+                        variant="contained"
+                        color="primary"
+                        className={classes.submit}
+                        onClick={() => (setFilter('market'))}
+                    >
+                        By Market
+                    </Button>}
                 </Box>
             </Box>
             {(trades == null || trades.length === 0) &&
