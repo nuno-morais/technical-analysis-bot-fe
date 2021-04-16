@@ -106,7 +106,7 @@ const TradesTable = ({ record, setRefresh, setError, trades, classes, dataProvid
 
 export const PortfolioList = props => {
     return (
-        <List {...props}>
+        <List  title="Watchlist" {...props}>
             <Datagrid expand={<PortfolioTrades />}>
                 <TextField label="Market" source="market" />
                 <TextField label="Product" source="product" />
@@ -116,7 +116,7 @@ export const PortfolioList = props => {
 }
 
 export const PortfolioCreate = (props) => (
-    <Create {...props}>
+    <Create title="New watchlist" {...props}>
         <SimpleForm>
             <TextInput label="Market" source="market" defaultValue={'US'} />
             <TextInput label="Product" source="product" />

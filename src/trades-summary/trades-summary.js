@@ -131,7 +131,7 @@ export const TradesSummaryInfo = ({ id, record, resource }) => {
 
 export const TradesSummaryList = props => {
     return (
-        <List {...props}>
+        <List title="Summary" {...props}>
             <Datagrid expand={<TradesSummaryInfo />}>
                 <FunctionField label="Closed at" render={record => `${record.year || "Not closed"}`} />
                 <FunctionField label="# Trades" render={record => `${record.trades.length}`} />
