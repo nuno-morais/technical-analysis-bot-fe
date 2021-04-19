@@ -1,12 +1,47 @@
-import React from 'react';
-import { Create, Datagrid, DateField, DateInput, Edit, List, NumberField, NumberInput, Show, SimpleForm, SimpleShowLayout, TextField, TextInput } from 'react-admin';
+import React, { useEffect, useState } from 'react';
+import { Create, Datagrid, DateField, DateInput, Edit, LinearProgress, List, NumberField, NumberInput, Show, SimpleForm, SimpleShowLayout, TextField, TextInput, useDataProvider } from 'react-admin';
 
 export const Info = ({record: {shares, opened_price, closed_price}}) => {
     if (closed_price != null) {
         const value = shares * (closed_price - opened_price);
-        return (<p>Value: {value}</p>)
+        return (<p>{value}</p>)
     }
     return (<p>Opened</p>);
+}
+
+
+const TradePrice = ({ record }) => {
+    const dataProvider = useDataProvider();
+    const [price, setPrice] = useState();
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        dataProvider.getList(`symbols`, {
+            sort: { field: 'product', order: 'DESC' },
+            filter: {
+                products: `${record.product}`
+            },
+            pagination: {
+                page: 1, 
+                perPage: 1
+            }
+        })
+        .then(({ data }) => {
+            if (data.length > 0) {
+                const price  = data[0].price;
+                setPrice(`${price}`);
+            } else {
+                setPrice('NA');
+            }
+            setLoading(false);
+        })
+        .catch(error => {
+            setPrice('NA');
+            setLoading(false);
+        })
+    }, [dataProvider, record]);
+
+    return (<p>{record.closed_price || (loading) ? <LinearProgress /> : price}</p>);
 }
 
 export const TradeList = props => {
@@ -21,7 +56,7 @@ export const TradeList = props => {
                 <DateField label="Opened at:" source="opened_at"/>
                 <NumberField label="Price" source="opened_price"/>
                 <DateField label="Closed at:" source="closed_at" />
-                <NumberField label="Price" source="closed_price"/>
+                <TradePrice label="Price" />
                 <Info props={props}/>
             </Datagrid>
         </List>

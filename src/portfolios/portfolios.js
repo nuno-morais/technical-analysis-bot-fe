@@ -75,8 +75,37 @@ const PortfolioTrades = ({ id, record, resource }) => {
         </div>)
 };
 
+const TradesTable = ({ record, trades, classes }) => {
+    const dataProvider = useDataProvider();
+    const [price, setPrice] = useState();
+    const [loading, setLoading] = useState(true);
 
-const TradesTable = ({ record, setRefresh, setError, trades, classes, dataProvider }) => {
+    useEffect(() => {
+        dataProvider.getList(`symbols`, {
+            sort: { field: 'product', order: 'DESC' },
+            filter: {
+                products: `${record.product}`
+            },
+            pagination: {
+                page: 1, 
+                perPage: 1
+            }
+        })
+        .then(({ data }) => {
+            if (data.length > 0) {
+                const price  = data[0].price;
+                setPrice(`${price}`);
+            } else {
+                setPrice('NA');
+            }
+            setLoading(false);
+        })
+        .catch(error => {
+            setPrice('NA');
+            setLoading(false);
+        })
+    }, [dataProvider, record]);
+
     return (<Table className={classes.table} aria-label="simple table">
                 <TableHead>
                 <TableRow>
@@ -95,8 +124,12 @@ const TradesTable = ({ record, setRefresh, setError, trades, classes, dataProvid
                         <TableCell>{moment(row.opened_at).format("YYYY-MM-DD")}</TableCell>
                         <TableCell>{row.opened_price}</TableCell>
                         <TableCell>{row.closed_at && moment(row.closed_at).format("YYYY-MM-DD")}</TableCell>
-                        <TableCell>{row.closed_price}</TableCell>
-                        <TableCell>{row.closed_at && (row.closed_price - row.opened_price) * row.shares}</TableCell>
+                        <TableCell>{row.closed_price ? row.closed_price : (loading ? <LinearProgress /> : `${price}`) }
+                        </TableCell>
+                        <TableCell>{row.closed_at 
+                                        ? ((row.closed_price - row.opened_price) * row.shares) : 
+                                        (loading ? <LinearProgress /> : ((price - row.opened_price) * row.shares))
+                                    }</TableCell>
                     </TableRow>
                 ))}
                 </TableBody>
@@ -110,10 +143,49 @@ export const PortfolioList = props => {
             <Datagrid expand={<PortfolioTrades />}>
                 <TextField label="Market" source="market" />
                 <TextField label="Product" source="product" />
+                <ProductPrice />
             </Datagrid>
         </List>
     );
 }
+
+const ProductPrice = ({ record }) => {
+    const dataProvider = useDataProvider();
+    const [price, setPrice] = useState();
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState();
+
+    useEffect(() => {
+        dataProvider.getList(`symbols`, {
+            sort: { field: 'product', order: 'DESC' },
+            filter: {
+                products: `${record.product}`
+            },
+            pagination: {
+                page: 1, 
+                perPage: 1
+            }
+        })
+        .then(({ data }) => {
+            if (data.length > 0) {
+                const price  = data[0].price;
+                setPrice(`$${price}`);
+            } else {
+                setPrice('NA')
+            }
+            setLoading(false);
+        })
+        .catch(error => {
+            setError(error);
+            setLoading(false);
+        })
+    }, [dataProvider, record]);
+
+    if (loading) return <LinearProgress />
+    if (error) return <Error title={'An error occurred on get prices'}/>;
+
+    return (<p>{price}</p>)
+};
 
 export const PortfolioCreate = (props) => (
     <Create title="New watchlist" {...props}>
